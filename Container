@@ -1,0 +1,383 @@
+# Container Registry Management
+
+![Docker](https://img.shields.io/badge/Docker-✓-blue.svg)
+![Container](https://img.shields.io/badge/Container%20Registry-✓-green.svg)
+![Access Control](https://img.shields.io/badge/Access%20Control-✓-orange.svg)
+
+A centralized platform for managing Docker container images with enterprise-grade access control and team collaboration features.
+
+## 🚀 Overview
+
+**Container Registry** provides a secure, centralized hub for your team to store, manage, and distribute Docker images with fine-grained access control and comprehensive visibility.
+
+## ✨ Key Features
+
+### 🔐 Access Control & Security
+- **Role-Based Access Control (RBAC)** - Fine-grained permissions
+- **Team Management** - Organize users and set group policies
+- **Image Scanning** - Security vulnerability detection
+- **Audit Logging** - Comprehensive activity tracking
+- **Compliance** - SOC2, HIPAA, GDPR ready
+
+### 🏗️ Image Management
+- **Private Repositories** - Secure image storage
+- **Version Control** - Tag and manage image versions
+- **Automated Builds** - CI/CD integration
+- **Storage Optimization** - Deduplication and cleanup policies
+- **Cross-Region Replication** - Global distribution
+
+### 👥 Team Collaboration
+- **Team Workspaces** - Isolated environments
+- **Access Logs** - Track who accessed what and when
+- **Approval Workflows** - Governance and compliance
+- **Usage Analytics** - Storage and pull statistics
+
+## 🏗️ Architecture
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   Developer     │    │   Container      │    │   Deployment    │
+│    Tools        │───▶│    Registry      │───▶│   Environments  │
+│                 │    │                  │    │                 │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+         │                       │                       │
+         │                       │                       │
+         ▼                       ▼                       ▼
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   CI/CD         │    │   Access         │    │   Monitoring    │
+│   Pipelines     │    │   Control        │    │   & Logging     │
+│                 │    │                  │    │                 │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+```
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Docker installed
+- Account permissions
+- Network access to registry
+
+### Basic Usage
+
+```bash
+# Login to registry
+docker login registry.yourcompany.com
+
+# Pull an image
+docker pull registry.yourcompany.com/team-name/app:latest
+
+# Push an image
+docker push registry.yourcompany.com/team-name/app:v1.2.3
+
+# List images (using registry API)
+curl -u username:token https://registry.yourcompany.com/v2/_catalog
+```
+
+### Team Setup
+
+```bash
+# Create team namespace
+./scripts/create-team.sh --name "mobile-team" --owner "alice@company.com"
+
+# Add team members
+./scripts/add-member.sh --team "mobile-team" --user "bob@company.com" --role developer
+./scripts/add-member.sh --team "mobile-team" --user "charlie@company.com" --role maintainer
+
+# Set repository permissions
+./scripts/set-permissions.sh --repo "mobile-team/ios-app" --team "mobile-team" --pull --push
+```
+
+## ⚙️ Configuration
+
+### Registry Configuration
+
+```yaml
+# config/registry.yaml
+version: 1.0
+storage:
+  filesystem:
+    rootdirectory: /var/lib/registry
+  delete:
+    enabled: true
+http:
+  addr: :5000
+  headers:
+    X-Content-Type-Options: [nosniff]
+auth:
+  token:
+    realm: https://auth.yourcompany.com/token
+    service: container-registry
+    issuer: auth.yourcompany.com
+    rootcertbundle: /certs/domain.crt
+```
+
+### Access Control Policies
+
+```yaml
+# config/policies.yaml
+policies:
+  - name: "developer-access"
+    description: "Standard developer permissions"
+    rules:
+      - resources: ["repositories"]
+        actions: ["pull", "push"]
+        effect: "allow"
+      
+  - name: "readonly-access"  
+    description: "Read-only for QA and staging"
+    rules:
+      - resources: ["repositories"]
+        actions: ["pull"]
+        effect: "allow"
+```
+
+## 🔐 Security Features
+
+### Image Security Scanning
+
+```bash
+# Scan image for vulnerabilities
+./scripts/scan-image.sh registry.yourcompany.com/team/app:latest
+
+# Generate security report
+./scripts/security-report.sh --team mobile-team --format pdf
+
+# Set security policies
+./scripts/set-security-policy.sh --critical 0 --high 2 --medium 10
+```
+
+### Access Control Examples
+
+```bash
+# Create read-only user
+./scripts/create-user.sh --name "qa-bot" --role viewer --team mobile-team
+
+# Temporary access token
+./scripts/create-token.sh --user "ci-bot" --expires 24h --scope "push,pull"
+
+# Audit access logs
+./scripts/audit-logs.sh --team mobile-team --days 7 --output report.html
+```
+
+## 🔄 CI/CD Integration
+
+### GitHub Actions
+
+```yaml
+# .github/workflows/docker.yml
+name: Build and Push
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Login to Registry
+        uses: docker/login-action@v2
+        with:
+          registry: registry.yourcompany.com
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_TOKEN }}
+          
+      - name: Build and Push
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: |
+            registry.yourcompany.com/mobile-team/app:${{ github.sha }}
+            registry.yourcompany.com/mobile-team/app:latest
+```
+
+### Jenkins Pipeline
+
+```groovy
+// Jenkinsfile
+pipeline {
+    agent any
+    environment {
+        REGISTRY = "registry.yourcompany.com"
+        TEAM = "mobile-team"
+    }
+    stages {
+        stage('Build and Push') {
+            steps {
+                script {
+                    docker.withRegistry("https://${REGISTRY}", 'registry-credentials') {
+                        def image = docker.build("${TEAM}/app:${env.BUILD_ID}")
+                        image.push()
+                        image.push('latest')
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+## 📊 Monitoring & Analytics
+
+### Usage Reports
+
+```bash
+# Generate storage report
+./scripts/storage-report.sh --team mobile-team --month 2024-01
+
+# Pull statistics
+./scripts/usage-stats.sh --repo mobile-team/ios-app --days 30
+
+# Cost analysis
+./scripts/cost-analysis.sh --team mobile-team --output csv
+```
+
+### Health Checks
+
+```bash
+# Registry health
+./scripts/health-check.sh
+
+# Storage health
+./scripts/storage-health.sh --threshold 80
+
+# Performance metrics
+./scripts/performance-metrics.sh --interval 24h
+```
+
+## 🗂️ Team Management
+
+### Creating Team Structure
+
+```bash
+# Create team hierarchy
+./scripts/create-team-structure.sh \
+  --name "mobile-infra" \
+  --parent "engineering" \
+  --managers "alice@company.com" \
+  --developers "bob@company.com,charlie@company.com" \
+  --viewers "qa-team@company.com"
+
+# Set team quotas
+./scripts/set-team-quotas.sh \
+  --team "mobile-infra" \
+  --storage 100GB \
+  --bandwidth 1TB \
+  --repositories 50
+```
+
+### Access Review
+
+```bash
+# Quarterly access review
+./scripts/access-review.sh --team mobile-infra --send-reminders
+
+# Cleanup inactive repositories
+./scripts/cleanup-repos.sh --inactive-days 180 --dry-run
+```
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+```bash
+# Authentication issues
+./scripts/debug-auth.sh --user bob@company.com
+
+# Network connectivity
+./scripts/debug-network.sh --registry registry.yourcompany.com
+
+# Storage issues
+./scripts/debug-storage.sh --check-disk --check-permissions
+```
+
+### Performance Optimization
+
+```bash
+# Cache optimization
+./scripts/optimize-cache.sh --size 20GB --strategy lru
+
+# Garbage collection
+./scripts/garbage-collect.sh --dry-run --verbose
+
+# Database maintenance
+./scripts/db-maintenance.sh --vacuum --analyze
+```
+
+## 📈 Best Practices
+
+### Image Management
+
+```bash
+# Use semantic versioning
+docker push registry.yourcompany.com/team/app:1.2.3
+docker push registry.yourcompany.com/team/app:1.2
+docker push registry.yourcompany.com/team/app:1
+
+# Cleanup old tags
+./scripts/cleanup-tags.sh --repo team/app --keep 10 --dry-run
+
+# Sign images
+./scripts/sign-image.sh registry.yourcompany.com/team/app:1.2.3
+```
+
+### Security Practices
+
+```bash
+# Regular security scans
+./scripts/scheduled-scan.sh --team mobile-team --schedule "0 2 * * *"
+
+# Access review automation
+./scripts/auto-access-review.sh --interval 90days
+
+# Backup policies
+./scripts/setup-backup.sh --frequency daily --retention 30days
+```
+
+## 🤝 Team Collaboration
+
+### Onboarding New Members
+
+```bash
+# New developer setup
+./scripts/onboard-developer.sh \
+  --email "new.dev@company.com" \
+  --team "mobile-infra" \
+  --role "developer" \
+  --training "container-security"
+
+# Generate access report for managers
+./scripts/team-access-report.sh --manager alice@company.com
+```
+
+### Cross-Team Collaboration
+
+```bash
+# Share image between teams
+./scripts/share-repository.sh \
+  --repo "mobile-infra/base-image" \
+  --target-team "web-team" \
+  --access-level "pull"
+
+# Create shared libraries
+./scripts/create-shared-library.sh \
+  --name "company-base-images" \
+  --owners "platform-team" \
+  --consumers "mobile-team,web-team,data-team"
+```
+
+---
+
+<div align="center">
+
+## 🚀 Get Started Today
+
+[**Quick Start Guide**](docs/quickstart.md) • 
+[**Team Setup**](docs/team-setup.md) • 
+[**Security Guide**](docs/security.md)
+
+**Enterprise-Grade Container Management for Teams**
+
+</div>
