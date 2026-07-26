@@ -1,0 +1,65 @@
+Berikut adalah koleksi maklumat dan pautan rasmi berkaitan Linux untuk platform GitHub, yang merangkumi aspek automasi, pembangunan, baris arahan, dan keselamatan.
+
+---
+
+### 1. GitHub Actions & Pelari Linux (Linux Runners)
+
+Pelari (runner) adalah mesin yang melaksanakan pekerjaan dalam workflow GitHub Actions.
+
+*   **Pelari Dihoskan GitHub (GitHub-Hosted Runners)**: GitHub menyediakan mesin maya (VM) dengan pelbagai sistem pengendalian, termasuk **Ubuntu Linux**, dengan alat-alat pembangunan pra-pasang.
+*   **Pelari Dihoskan Sendiri (Self-Hosted Runners)**: Anda boleh mendaftarkan mesin Linux anda sendiri sebagai pelari. Pelari ini secara automatik akan menerima label `linux` untuk menunjukkan sistem pengendaliannya.
+*   **Persediaan Pelari Dihoskan Sendiri**: Panduan langkah demi langkah untuk memasang dan mengkonfigurasi pelari pada mesin Linux boleh didapati di tetapan repository atau organisasi GitHub anda.
+
+| Pautan Rasmi | Penerangan |
+| :--- | :--- |
+| [About GitHub-hosted runners](https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners) | Maklumat tentang pelari yang dihoskan GitHub, termasuk spesifikasi untuk Ubuntu Linux. |
+| [Using self-hosted runners in a workflow](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/using-self-hosted-runners-in-a-workflow) | Panduan menggunakan pelari dihoskan sendiri, termasuk cara menapis untuk pelari Linux. |
+
+---
+
+### 2. GitHub Codespaces & Dev Container (Linux)
+
+GitHub Codespaces menyediakan persekitaran pembangunan awan yang berkuasa dan boleh dihasilkan semula, yang dibina di atas bekas Docker dan secara asasnya adalah persekitaran Linux.
+
+*   **Dev Container**: Persekitaran pembangunan dalam Codespaces dikonfigurasikan menggunakan fail `devcontainer.json`. Fail ini membolehkan anda menentukan alat, runtime, dan sambungan yang diperlukan untuk projek anda.
+*   **Kesesuaian**: Anda boleh menyesuaikan Codespaces untuk memenuhi keperluan projek anda, termasuk menukar shell lalai atau jenis mesin.
+
+| Pautan Rasmi | Penerangan |
+| :--- | :--- |
+| [Introduction to dev containers](https://docs.github.com/en/codespaces/setting-up-your-project-for-codespaces/adding-a-dev-container-configuration/introduction-to-dev-containers) | Pengenalan kepada konsep dev container dan cara ia digunakan dalam Codespaces. |
+| [Adding a dev container configuration to your repository](https://docs.github.com/en/codespaces/setting-up-your-project-for-codespaces/adding-a-dev-container-configuration) | Panduan menambah konfigurasi dev container ke repository anda. |
+| [Codespaces documentation](https://docs.github.com/en/codespaces) | Halaman utama dokumentasi untuk semua perkara berkaitan GitHub Codespaces. |
+
+---
+
+### 3. GitHub CLI (Alat Baris Arahan)
+
+GitHub CLI (`gh`) ialah alat baris arahan rasmi yang membolehkan anda berinteraksi dengan GitHub terus dari terminal Linux.
+
+*   **Sokongan Platform**: `gh` menyokong **Linux**, macOS, dan Windows dengan tingkah laku yang konsisten.
+*   **Pemasangan di Linux**: `gh` boleh dipasang melalui kebanyakan pengurus pakej utama Linux.
+    *   **Debian/Ubuntu**: `sudo apt install gh`
+    *   **Fedora/RHEL**: `sudo dnf install 'https://github.com/cli/cli/releases/download/v2.74.0/gh_2.74.0_linux_amd64.rpm'`
+
+| Pautan Rasmi | Penerangan |
+| :--- | :--- |
+| [GitHub CLI manual](https://cli.github.com/manual/) | Manual rasmi untuk semua perintah GitHub CLI. |
+| [GitHub CLI repository](https://github.com/cli/cli) | Repository sumber untuk GitHub CLI, dengan maklumat pemasangan lanjut. |
+
+---
+
+### 4. GitHub Advanced Security (Keselamatan)
+
+Walaupun ciri keselamatan GitHub Advanced Security tidak khusus untuk Linux, ia berfungsi dengan lancar pada repository yang mengandungi kod untuk sistem Linux.
+
+*   **Ketersediaan**: GitHub Advanced Security tersedia untuk akaun perusahaan di **GitHub Enterprise Cloud** dan **GitHub Enterprise Server**.
+*   **Ciri Utama**: Termasuk *secret scanning* (mengimbas kod untuk rahsia yang terdedah) dan *code scanning* (analisis statik untuk kelemahan keselamatan).
+
+| Pautan Rasmi | Penerangan |
+| :--- | :--- |
+| [Setting up GitHub Advanced Security features](https://docs.github.com/en/enterprise-server@latest/admin/code-security/managing-github-advanced-security-for-your-enterprise/setting-up-github-advanced-security-features) | Panduan menyediakan ciri-ciri GitHub Advanced Security untuk perusahaan anda. |
+| [Configuring secret scanning for your appliance](https://docs.github.com/en/enterprise-server@latest/admin/code-security/secret-scanning/configuring-secret-scanning-for-your-appliance) | Panduan mengkonfigurasi *secret scanning* untuk GitHub Enterprise Server. |
+
+---
+
+Jika anda memerlukan maklumat lebih mendalam tentang mana-mana topik ini atau aspek lain penggunaan GitHub dengan Linux, beritahu saya.
